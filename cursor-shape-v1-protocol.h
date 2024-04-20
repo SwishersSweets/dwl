@@ -85,16 +85,14 @@ extern const struct wl_interface wp_cursor_shape_manager_v1_interface;
  * @page page_iface_wp_cursor_shape_device_v1 wp_cursor_shape_device_v1
  * @section page_iface_wp_cursor_shape_device_v1_desc Description
  *
- * This interface advertises the list of supported cursor shapes for a
- * device, and allows clients to set the cursor shape.
+ * This interface allows clients to set the cursor shape.
  * @section page_iface_wp_cursor_shape_device_v1_api API
  * See @ref iface_wp_cursor_shape_device_v1.
  */
 /**
  * @defgroup iface_wp_cursor_shape_device_v1 The wp_cursor_shape_device_v1 interface
  *
- * This interface advertises the list of supported cursor shapes for a
- * device, and allows clients to set the cursor shape.
+ * This interface allows clients to set the cursor shape.
  */
 extern const struct wl_interface wp_cursor_shape_device_v1_interface;
 #endif
