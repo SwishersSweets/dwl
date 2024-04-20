@@ -1,9 +1,21 @@
 # MY PERSONAL BUILD OF DWL
+### Patches:
+    swallow
+    gaps
+    bar (added tllist dependency)
+### Keybinds
+ModKey = super/logo/meta/windows
+ModKey + Return spawns a terminal
+ModKey + D Spawns Fuzzel (app launcher)
+ModKey + Shift + Q kills the current focused window
+ModKKey + Shift + E exits dwl
+ModKey + Tab Switches the focused tab to the master
 
 ## Building dwl
 
 dwl has the following dependencies:
 ```
+Typed Linked List (tllist)
 libinput
 wayland
 wlroots (compiled with the libinput backend)
