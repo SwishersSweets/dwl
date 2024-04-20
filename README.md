@@ -11,6 +11,8 @@ ModKey + Shift + Q kills the current focused window
 ModKKey + Shift + E exits dwl
 ModKey + Tab Switches the focused tab to the master
 
+all the keybinds are available in config.def.h/config.h
+
 ## Building dwl
 
 dwl has the following dependencies:
