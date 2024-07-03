@@ -1,5 +1,9 @@
 # dwl - dwm for Wayland
 
+# THIS IS A PERSONAL BUILD OF DWL
+# IF YOU HAVE ANY ISSUE WITH IT DO NOT CONTACT THE DEVS
+ 
+
 Join us on our IRC channel: [#dwl on Libera Chat]  
 Or on our [Discord server].
 
