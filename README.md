@@ -1,23 +1,62 @@
-# MY PERSONAL BUILD OF DWL
-### Patches:
-    swallow
-    gaps
-    bar (added tllist dependency)
-### Keybinds
-ModKey = super/logo/meta/windows
-ModKey + Return spawns a terminal
-ModKey + D Spawns Fuzzel (app launcher)
-ModKey + Shift + Q kills the current focused window
-ModKKey + Shift + E exits dwl
-ModKey + Tab Switches the focused tab to the master
+# dwl - dwm for Wayland
 
-all the keybinds are available in config.def.h/config.h
+Join us on our IRC channel: [#dwl on Libera Chat]  
+Or on our [Discord server].
+
+dwl is a compact, hackable compositor for [Wayland] based on [wlroots]. It is
+intended to fill the same space in the Wayland world that dwm does in X11,
+primarily in terms of functionality, and secondarily in terms of philosophy.
+Like dwm, dwl is:
+
+- Easy to understand, hack on, and extend with patches
+- One C source file (or a very small number) configurable via `config.h`
+- Tied to as few external dependencies as possible
+
+dwl is not meant to provide every feature under the sun. Instead, like dwm, it
+sticks to features which are necessary, simple, and straightforward to implement
+given the base on which it is built. Implemented default features are:
+
+- Any features provided by dwm/Xlib: simple window borders, tags, keybindings,
+  client rules, mouse move/resize. Providing a built-in status bar is an
+  exception to this goal, to avoid dependencies on font rendering and/or
+  drawing libraries when an external bar could work well.
+- Configurable multi-monitor layout support, including position and rotation
+- Configurable HiDPI/multi-DPI support
+- Idle-inhibit protocol which lets applications such as mpv disable idle
+  monitoring
+- Provide information to external status bars via stdout/stdin
+- Urgency hints via xdg-activate protocol
+- Support screen lockers via ext-session-lock-v1 protocol
+- Various Wayland protocols
+- XWayland support as provided by wlroots (can be enabled in `config.mk`)
+- Zero flickering - Wayland users naturally expect that "every frame is perfect"
+- Layer shell popups (used by Waybar)
+- Damage tracking provided by scenegraph API
+
+Given the Wayland architecture, dwl has to implement features from dwm **and**
+the xorg-server. Because of this, it is impossible to maintain the original
+project goal of 2000 SLOC and have a reasonably complete compositor with
+features comparable to dwm. However, this does not mean that the code will grow
+indiscriminately. We will try to keep the code as small as possible.
+
+Features under consideration (possibly as patches) are:
+
+- Protocols made trivial by wlroots
+- Implement the text-input and input-method protocols to support IME once ibus
+  implements input-method v2 (see https://github.com/ibus/ibus/pull/2256 and
+  https://codeberg.org/dwl/dwl/pulls/235)
+
+Feature *non-goals* for the main codebase include:
+
+- Client-side decoration (any more than is necessary to tell the clients not to)
+- Client-initiated window management, such as move, resize, and close, which can
+  be done through the compositor
+- Animations and visual effects
 
 ## Building dwl
 
 dwl has the following dependencies:
 ```
-Typed Linked List (tllist)
 libinput
 wayland
 wlroots (compiled with the libinput backend)
@@ -47,7 +86,7 @@ Wayland without restarting the entire display server, so any changes will take
 effect the next time dwl is executed.
 
 As in the dwm community, we encourage users to share patches they have created.
-Check out the dwl [patches repository] and [patches wiki]!
+Check out the dwl [patches repository]!
 
 ## Running dwl
 
@@ -123,3 +162,19 @@ inspiration, and to the various contributors to the project, including:
 - Guido Cella for the layer-shell protocol implementation, patch maintenance,
   and for helping to keep the project running
 - Stivvo for output management and fullscreen support, and patch maintenance
+
+
+[Discord server]: https://discord.gg/jJxZnrGPWN
+[#dwl on Libera Chat]: https://web.libera.chat/?channels=#dwl
+[Wayland]: https://wayland.freedesktop.org/
+[wlroots]: https://gitlab.freedesktop.org/wlroots/wlroots/
+[wlroots-next branch]: https://codeberg.org/dwl/dwl/src/branch/wlroots-next
+[patches repository]: https://codeberg.org/dwl/dwl-patches
+[s6]: https://skarnet.org/software/s6/
+[anopa]: https://jjacky.com/anopa/
+[runit]: http://smarden.org/runit/faq.html#userservices
+[dinit]: https://davmac.org/projects/dinit/
+[`systemd --user`]: https://wiki.archlinux.org/title/Systemd/User
+[wiki]: https://codeberg.org/dwl/dwl/wiki/Home#compatible-status-bars
+[list of useful resources on our wiki]:
+    https://codeberg.org/dwl/dwl/wiki/Home#migrating-from-x
