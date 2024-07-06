@@ -18,8 +18,8 @@ static const float rootcolor[]             = COLOR(0x000000ff);
 static const float fullscreen_bg[]         = {0.1f, 0.1f, 0.1f, 1.0f}; /* You can also use glsl colors */
 static uint32_t colors[][3]                = {
 	/*               fg          bg          border    */
-	[SchemeNorm] = { 0xbbbbbbff, 0x222222ff, 0x444444ff },
-	[SchemeSel]  = { 0xeeeeeeff, 0x005577ff, 0x005577ff },
+	[SchemeNorm] = { 0xbbbbbbff, 0x0e0e0eff, 0x000000ff },
+	[SchemeSel]  = { 0x010101ff, 0xbbbbbbff, 0xbbbbbbff },
 	[SchemeUrg]  = { 0,          0,          0x770000ff },
 };
 
@@ -33,6 +33,7 @@ static int log_level = WLR_ERROR;
 static const char *const autostart[] = {
   "qpwgraph", "-m", "-a", "/home/nate/Documents/PatchBayFile.qpwgraph", NULL,
   "hyprpaper", NULL,
+  "hypridle", NULL,
   "dunst", NULL,
   NULL
 };
@@ -43,8 +44,8 @@ static const Rule rules[] = {
 	/* examples: */
 	{ "Gimp_EXAMPLE",     NULL,       0,            1,          0,      1,         -1 }, /* Start on currently visible tags floating, not tiled */
 	{ "firefox_EXAMPLE",  NULL,       1 << 8,       0,          0,      1,         -1 }, /* Start on ONLY tag "9" */
-	{ "alacritty",        NULL,       0,            0,          1,      0,         -1 },/* make foot swallow clients that are not foot */
-  { "kitty",            NULL,       0,            1,          1,      0,          -1},
+	{ "alacritty",        NULL,       0,            0,          1,      1,         -1 },/* make foot swallow clients that are not foot */
+  { "kitty",            NULL,       0,            0,          1,      1,         -1 },
 };
 
 /* layout(s) */
@@ -140,9 +141,7 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 /* commands */
 static const char *termcmd[] = { "alacritty", NULL };
 static const char *menucmd[] = { "fuzzel", NULL };
-static const char *hyprlock[] = { "hyprlock", NULL };
 static const char *hyprshotcmd[] = {"hyprshot", "-m", "region", "--clipboard-only", NULL };
-static const char *grim[] = { "grim", NULL};/*reaper*/
 static const char *tbm[] = { "/home/nate/.config/scripts/bookmarks", NULL };
 static const char *tap[] = { "/home/nate/.config/scripts/tofipower", NULL }; /*Terrance and Phillip */
 static const Key keys[] = {
@@ -151,10 +150,10 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_d,          spawn,          {.v = menucmd} },
 	{ MODKEY,                    XKB_KEY_Return,     spawn,          {.v = termcmd} },
   { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_S,          spawn,          {.v = hyprshotcmd} },
-  { MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_l,          spawn,          {.v = hyprlock} },
+  { 0,                         XKB_KEY_Print,      spawn,          SHCMD("grim") }, /*reaper)*/
+  { MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_l,          spawn,          SHCMD("hyprlock")},
   { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_X,          spawn,          {.v = tap} },
   { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_B,          spawn,          {.v = tbm} },
-  { 0,                    XKB_KEY_Print,      spawn,          {.v = grim} },
   { MODKEY,                    XKB_KEY_b,          togglebar,      {0} },
   { MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
@@ -163,7 +162,7 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05f} },
 	{ MODKEY,                    XKB_KEY_l,          setmfact,       {.f = +0.05f} },
 	{ MODKEY,                    XKB_KEY_Tab,        zoom,           {0} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Tab,        view,           {0} },
+	{ MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_Tab,        view,           {0} },
 	{ MODKEY,                    XKB_KEY_g,          togglegaps,     {0} },
   { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          killclient,     {0} },
 	{ MODKEY,                    XKB_KEY_t,          setlayout,      {.v = &layouts[0]} },
@@ -171,8 +170,8 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                    XKB_KEY_space,      setlayout,      {0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,      togglefloating, {0} },
-	{ MODKEY,                    XKB_KEY_e,         togglefullscreen, {0} },
-	{ MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_e,      togglefakefullscreen, {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_F,          togglefullscreen, {0} },
+	{ MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_f,          togglefakefullscreen, {0} },
 	{ MODKEY,                    XKB_KEY_0,          view,           {.ui = ~0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_parenright, tag,            {.ui = ~0} },
 	{ MODKEY,                    XKB_KEY_comma,      focusmon,       {.i = WLR_DIRECTION_LEFT} },
@@ -189,8 +188,14 @@ static const Key keys[] = {
 	TAGKEYS(          XKB_KEY_8, XKB_KEY_asterisk,                   7),
 	TAGKEYS(          XKB_KEY_9, XKB_KEY_parenleft,                  8),
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_E,          quit,           {0} },
-
-	/* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
+  { 0,               XKB_KEY_XF86AudioRaiseVolume, spawn,          SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+") },
+  { 0,               XKB_KEY_XF86AudioLowerVolume, spawn,          SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-") },
+	{ 0,               XKB_KEY_XF86AudioMute       , spawn,          SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle") },
+  { 0,               XKB_KEY_XF86AudioNext       , spawn,          SHCMD("playerctl next") },
+  { 0,               XKB_KEY_XF86AudioPrev       , spawn,          SHCMD("playerctl prev") },
+  { 0,               XKB_KEY_XF86AudioPlay       , spawn,          SHCMD("playerctl play-pause") },
+  { 0,               XKB_KEY_XF86AudioStop       , spawn,          SHCMD("playerctl pause") },
+    /* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
 	{ WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_Terminate_Server, quit, {0} },
 	/* Ctrl-Alt-Fx is used to switch to another VT, if you don't know what a VT is
 	 * do not remove them.
