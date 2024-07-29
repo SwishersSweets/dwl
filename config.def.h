@@ -8,11 +8,11 @@ static const int sloppyfocus               = 1;  /* focus follows mouse */
 static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will disable idle tracking even if it's surface isn't visible  */
 static const int smartgaps                 = 0;  /* 1 means no outer gap when there is only one window */
 static int gaps                            = 1;  /* 1 means gaps between windows are added */
-static const unsigned int gappx            = 2; /* gap pixel between windows */
+static const unsigned int gappx            = 4; /* gap pixel between windows */
 static const unsigned int borderpx         = 1;  /* border pixel of windows */
 static const int showbar                   = 1; /* 0 means no bar */
 static const int topbar                    = 1; /* 0 means bottom bar */
-static const char *fonts[]                 = {"jetbrainsmono:size=10"};
+static const char *fonts[]                 = {"monospace:size=10"};
 static const float rootcolor[]             = COLOR(0x000000ff);
 /* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
 static const float fullscreen_bg[]         = {0.1f, 0.1f, 0.1f, 1.0f}; /* You can also use glsl colors */
@@ -29,23 +29,20 @@ static char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 /* logging */
 static int log_level = WLR_ERROR;
 
-/* AUTOSTART */
+/* Autostart */
 static const char *const autostart[] = {
   "qpwgraph", "-m", "-a", "/home/nate/Documents/PatchBayFile.qpwgraph", NULL,
   "hyprpaper", NULL,
   "hypridle", NULL,
   "dunst", NULL,
-  NULL
 };
 
 /* NOTE: ALWAYS keep a rule declared even if you don't use rules (e.g leave at least one example) */
 static const Rule rules[] = {
 	/* app_id             title       tags mask     isfloating  isterm  noswallow  monitor */
 	/* examples: */
-	{ "Gimp_EXAMPLE",     NULL,       0,            1,          0,      1,         -1 }, /* Start on currently visible tags floating, not tiled */
-	{ "firefox_EXAMPLE",  NULL,       1 << 8,       0,          0,      1,         -1 }, /* Start on ONLY tag "9" */
-	{ "alacritty",        NULL,       0,            0,          1,      1,         -1 },/* make foot swallow clients that are not foot */
-  { "kitty",            NULL,       0,            0,          1,      1,         -1 },
+	{ "alacritty",             NULL,       0,            0,          1,      1,         -1 },
+  { "kitty",                 NULL,       0,            0,          1,      1,          -1},
 };
 
 /* layout(s) */
@@ -143,7 +140,8 @@ static const char *termcmd[] = { "alacritty", NULL };
 static const char *menucmd[] = { "fuzzel", NULL };
 static const char *hyprshotcmd[] = {"hyprshot", "-m", "region", "--clipboard-only", NULL };
 static const char *tbm[] = { "/home/nate/.config/scripts/bookmarks", NULL };
-static const char *tap[] = { "/home/nate/.config/scripts/tofipower", NULL }; /*Terrance and Phillip */
+static const char *tap[] = { "/home/nate/.config/scripts/tofipower", NULL };
+
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
@@ -159,9 +157,9 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_p,          incnmaster,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_p,          incnmaster,     {.i = -1} },
-	{ MODKEY,                    XKB_KEY_a,          setmfact,       {.f = -0.05f} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_d,          setmfact,       {.f = +0.05f} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Tab,        zoom,           {0} },
+	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05f} },
+	{ MODKEY,                    XKB_KEY_l,          setmfact,       {.f = +0.05f} },
+	{ MODKEY,                    XKB_KEY_Tab,        zoom,           {0} },
 	{ MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_Tab,        view,           {0} },
 	{ MODKEY,                    XKB_KEY_g,          togglegaps,     {0} },
   { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          killclient,     {0} },
@@ -195,7 +193,8 @@ static const Key keys[] = {
   { 0,               XKB_KEY_XF86AudioPrev       , spawn,          SHCMD("playerctl prev") },
   { 0,               XKB_KEY_XF86AudioPlay       , spawn,          SHCMD("playerctl play-pause") },
   { 0,               XKB_KEY_XF86AudioStop       , spawn,          SHCMD("playerctl pause") },
-    /* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
+
+	/* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
 	{ WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_Terminate_Server, quit, {0} },
 	/* Ctrl-Alt-Fx is used to switch to another VT, if you don't know what a VT is
 	 * do not remove them.
