@@ -1,3 +1,5 @@
+# dwl 0.7 is made for wlroots 0.18 not the git version
+if you want to pull this branch use git clone -b 0.7 [repo link]
 # dwl - dwm for Wayland
 
 Join us on our IRC channel: [#dwl on Libera Chat]  
