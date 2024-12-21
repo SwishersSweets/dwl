@@ -136,11 +136,11 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *termcmd[] = { "alacritty", NULL };
+static const char *termcmd[] = { "kitty", NULL };
 static const char *menucmd[] = { "fuzzel", NULL };
 static const char *hyprshotcmd[] = {"hyprshot", "-m", "region", "--clipboard-only", NULL };
-static const char *tbm[] = { "/home/nate/.config/scripts/bookmarks", NULL };
-static const char *tap[] = { "/home/nate/.config/scripts/tofipower", NULL };
+/*static const char *tbm[] = { "/home/nate/.config/scripts/bookmarks", NULL };
+static const char *tap[] = { "/home/nate/.config/scripts/tofipower", NULL }; */
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
@@ -150,8 +150,9 @@ static const Key keys[] = {
   { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_S,          spawn,          {.v = hyprshotcmd} },
   { 0,                         XKB_KEY_Print,      spawn,          SHCMD("grim") }, /*reaper)*/
   { MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_l,          spawn,          SHCMD("hyprlock")},
-  { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_X,          spawn,          {.v = tap} },
-  { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_B,          spawn,          {.v = tbm} },
+  { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_X,          spawn,          SHCMD("~/.config/scripts/tofipower") },
+  { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_B,          spawn,          SHCMD("~/.config/scripts/bookmarks") },
+  { MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_Tab,        spawn,          SHCMD("~/.config/scripts/tofiwinswitch") },
   { MODKEY,                    XKB_KEY_b,          togglebar,      {0} },
   { MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
