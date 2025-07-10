@@ -8,7 +8,7 @@ static const int sloppyfocus               = 1;  /* focus follows mouse */
 static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will disable idle tracking even if it's surface isn't visible  */
 static const int smartgaps                 = 0;  /* 1 means no outer gap when there is only one window */
 static int gaps                            = 1;  /* 1 means gaps between windows are added */
-static const unsigned int gappx            = 2; /* gap pixel between windows */
+static const unsigned int gappx            = 4; /* gap pixel between windows */
 static const unsigned int borderpx         = 1;  /* border pixel of windows */
 static const int showbar                   = 1; /* 0 means no bar */
 static const int topbar                    = 1; /* 0 means bottom bar */
@@ -29,24 +29,20 @@ static char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 /* logging */
 static int log_level = WLR_ERROR;
 
-/* AUTOSTART */
+/* Autostart */
 static const char *const autostart[] = {
   "qpwgraph", "-m", "-a", "/home/nate/Documents/PatchBayFile.qpwgraph", NULL,
   "hyprpaper", NULL,
   "hypridle", NULL,
   "dunst", NULL,
-  "/usr/lib/xdg-desktop-portal-hyprland" , NULL, 
-  NULL
 };
 
 /* NOTE: ALWAYS keep a rule declared even if you don't use rules (e.g leave at least one example) */
 static const Rule rules[] = {
 	/* app_id             title       tags mask     isfloating  isterm  noswallow  monitor */
 	/* examples: */
-	{ "Gimp_EXAMPLE",     NULL,       0,            1,          0,      1,         -1 }, /* Start on currently visible tags floating, not tiled */
-	{ "firefox_EXAMPLE",  NULL,       1 << 8,       0,          0,      1,         -1 }, /* Start on ONLY tag "9" */
-	{ "alacritty",        NULL,       0,            0,          1,      1,         -1 },/* make foot swallow clients that are not foot */
-  { "kitty",            NULL,       0,            0,          1,      1,         -1 },
+	{ "alacritty",             NULL,       0,            0,          1,      1,         -1 },
+  { "kitty",                 NULL,       0,            0,          1,      1,          -1},
 };
 
 /* layout(s) */
@@ -140,21 +136,24 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *termcmd[] = { "alacritty", NULL };
+static const char *termcmd[] = { "kitty", NULL };
 static const char *menucmd[] = { "fuzzel", NULL };
-static const char *hyprshotcmd[] = {"hyprshot", "-m", "region", "--clipboard-only", NULL };
-static const char *tbm[] = { "/home/nate/.config/scripts/bookmarks", NULL };
-static const char *tap[] = { "/home/nate/.config/scripts/tofipower", NULL }; /*Terrance and Phillip */
+static const char *hyprshotcmd[] = {"hyprshot", "-m", "-z", "region", "--clipboard-only", NULL };
+/*static const char *tbm[] = { "/home/nate/.config/scripts/bookmarks", NULL };
+static const char *tap[] = { "/home/nate/.config/scripts/tofipower", NULL }; */
+
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
 	{ MODKEY,                    XKB_KEY_d,          spawn,          {.v = menucmd} },
 	{ MODKEY,                    XKB_KEY_Return,     spawn,          {.v = termcmd} },
   { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_S,          spawn,          {.v = hyprshotcmd} },
+  { MODKEY,                    XKB_KEY_Print,      spawn,          SHCMD ("slurp | grim -g - - | wl-copy") },
   { 0,                         XKB_KEY_Print,      spawn,          SHCMD("grim") }, /*reaper)*/
   { MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_l,          spawn,          SHCMD("hyprlock")},
-  { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_X,          spawn,          {.v = tap} },
-  { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_B,          spawn,          {.v = tbm} },
+  { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_X,          spawn,          SHCMD("~/.config/scripts/tofipower") },
+  { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_B,          spawn,          SHCMD("~/.config/scripts/bookmarks") },
+  { MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_Tab,        spawn,          SHCMD("~/.config/scripts/tofiwinswitch") },
   { MODKEY,                    XKB_KEY_b,          togglebar,      {0} },
   { MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
@@ -196,7 +195,8 @@ static const Key keys[] = {
   { 0,               XKB_KEY_XF86AudioPrev       , spawn,          SHCMD("playerctl prev") },
   { 0,               XKB_KEY_XF86AudioPlay       , spawn,          SHCMD("playerctl play-pause") },
   { 0,               XKB_KEY_XF86AudioStop       , spawn,          SHCMD("playerctl pause") },
-    /* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
+
+	/* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
 	{ WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_Terminate_Server, quit, {0} },
 	/* Ctrl-Alt-Fx is used to switch to another VT, if you don't know what a VT is
 	 * do not remove them.
